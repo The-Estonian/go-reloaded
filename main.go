@@ -10,40 +10,71 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello!")
 	data, error := os.ReadFile("sample.txt")
 	splitData := strings.Split(string(data), " ")
 	if error != nil {
 		panic("Error with file")
 	} else {
 		var newStringList []string
-		counter := 0
-		for i := 0; i < len(splitData)-1; i++ {
-			if splitData[i+1] == "(up)" {
-				newStringList = append(newStringList, strings.ToUpper(splitData[i]))
+		for i := 0; i < len(splitData); i++ {
+			if splitData[i] == "(up)" {
+				newStringList[len(newStringList)-1] = strings.ToUpper(newStringList[len(newStringList)-1])
+			} else if splitData[i] == "(hex)" {
+				number, _ := strconv.ParseInt(newStringList[len(newStringList)-1], 16, 64)
+				newStringList[len(newStringList)-1] = strconv.FormatInt(number, 10)
+			} else if splitData[i] == "(bin)" {
+				number, _ := strconv.ParseInt(newStringList[len(newStringList)-1], 2, 64)
+				newStringList[len(newStringList)-1] = strconv.FormatInt(number, 10)
+			} else if splitData[i] == "(low)" {
+				newStringList[len(newStringList)-1] = strings.ToLower(newStringList[len(newStringList)-1])
+			} else if splitData[i] == "(cap)" {
+				newStringList[len(newStringList)-1] = cases.Title(language.Und, cases.NoLower).String(newStringList[len(newStringList)-1])
+			} else if strings.HasPrefix(splitData[i], "(low,") {
+				iteratorCount, _ := strconv.Atoi(string(splitData[i+1][0]))
+				for j := iteratorCount - 1; j >= 0; j-- {
+					newStringList[len(newStringList)-j-1] = strings.ToLower(newStringList[len(newStringList)-j-1])
+				}
 				i++
-			} else if strings.HasPrefix(splitData[i+1], "(low,") {
-				counter, _ = strconv.Atoi(string(splitData[i+2][0]))
-				fmt.Println(counter)
-			} else if splitData[i+1] == "(low)" {
-				newStringList = append(newStringList, strings.ToLower(splitData[i]))
+			} else if strings.HasPrefix(splitData[i], "(up,") {
+				iteratorCount, _ := strconv.Atoi(string(splitData[i+1][0]))
+				for j := iteratorCount - 1; j >= 0; j-- {
+					newStringList[len(newStringList)-j-1] = strings.ToUpper(newStringList[len(newStringList)-j-1])
+				}
 				i++
-			} else if splitData[i+1] == "(bin)" {
-				number, _ := strconv.ParseInt(splitData[i], 2, 64)
-				newStringList = append(newStringList, strconv.FormatInt(number, 10))
+			} else if strings.HasPrefix(splitData[i], "(cap,") {
+				iteratorCount, _ := strconv.Atoi(string(splitData[i+1][0]))
+				for j := iteratorCount - 1; j >= 0; j-- {
+					newStringList[len(newStringList)-j-1] = cases.Title(language.Und, cases.NoLower).String(newStringList[len(newStringList)-j-1])
+				}
 				i++
-			} else if splitData[i+1] == "(hex)" {
-				number, _ := strconv.ParseInt(splitData[i], 16, 64)
-				newStringList = append(newStringList, strconv.FormatInt(number, 10))
-				i++
-			} else if splitData[i+1] == "(cap)" {
-				newStringList = append(newStringList, cases.Title(language.Und, cases.NoLower).String(splitData[i]))
-				i++
-			} else {
+			} else if splitData[i] == "a" && string(splitData[i+1][0]) == "a" ||
+				splitData[i] == "a" && string(splitData[i+1][0]) == "e" ||
+				splitData[i] == "a" && string(splitData[i+1][0]) == "i" ||
+				splitData[i] == "a" && string(splitData[i+1][0]) == "o" ||
+				splitData[i] == "a" && string(splitData[i+1][0]) == "u" ||
+				splitData[i] == "a" && string(splitData[i+1][0]) == "h" {
+				newStringList = append(newStringList, "an")
+			} else if string(splitData[i][0]) == "." {
+				newStringList[len(newStringList)-1] = newStringList[len(newStringList)-1] + "."
+				newStringList = append(newStringList, splitData[i][1:])
+			} else if string(splitData[i][0]) == "," {
+				newStringList[len(newStringList)-1] = newStringList[len(newStringList)-1] + ","
+				newStringList = append(newStringList, splitData[i][1:])
+			} else if string(splitData[i][0]) == "!" {
+				newStringList[len(newStringList)-1] = newStringList[len(newStringList)-1] + "!"
+				newStringList = append(newStringList, splitData[i][1:])
+			} else if string(splitData[i][0]) == "?" {
+				newStringList[len(newStringList)-1] = newStringList[len(newStringList)-1] + "?"
+				newStringList = append(newStringList, splitData[i][1:])
+			} else if string(splitData[i][0]) == ":" {
+				newStringList[len(newStringList)-1] = newStringList[len(newStringList)-1] + ":"
+				newStringList = append(newStringList, splitData[i][1:])
+			} else if string(splitData[i][0]) == ";" {
+				newStringList[len(newStringList)-1] = newStringList[len(newStringList)-1] + ";"
+				newStringList = append(newStringList, splitData[i][1:])
+				} else {
 				newStringList = append(newStringList, splitData[i])
 			}
-		}
-		newStringList = append(newStringList, splitData[len(splitData)-1])
 		fmt.Println(newStringList)
 		newFile, error := os.Create("result.txt")
 		if error != nil {
