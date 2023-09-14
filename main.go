@@ -54,33 +54,50 @@ func main() {
 				splitData[i] == "a" && string(splitData[i+1][0]) == "u" ||
 				splitData[i] == "a" && string(splitData[i+1][0]) == "h" {
 				newStringList = append(newStringList, "an")
-			} else if string(splitData[i][0]) == "." {
+			} else if string(splitData[i][0]) == "." && string(splitData[i][1]) != "." {
 				newStringList[len(newStringList)-1] = newStringList[len(newStringList)-1] + "."
 				newStringList = append(newStringList, splitData[i][1:])
 			} else if string(splitData[i][0]) == "," {
 				newStringList[len(newStringList)-1] = newStringList[len(newStringList)-1] + ","
 				newStringList = append(newStringList, splitData[i][1:])
-			} else if string(splitData[i][0]) == "!" {
+			} else if string(splitData[i][0]) == "!" && len(splitData[i]) == 1 {
 				newStringList[len(newStringList)-1] = newStringList[len(newStringList)-1] + "!"
 				newStringList = append(newStringList, splitData[i][1:])
-			} else if string(splitData[i][0]) == "?" {
+			} else if string(splitData[i][0]) == "?" && len(splitData[i]) == 1 {
 				newStringList[len(newStringList)-1] = newStringList[len(newStringList)-1] + "?"
 				newStringList = append(newStringList, splitData[i][1:])
+			} else if string(splitData[i][0]) == "!" && string(splitData[i][1]) == "!" ||
+				string(splitData[i][0]) == "!" && string(splitData[i][1]) == "?" ||
+				string(splitData[i][0]) == "?" && string(splitData[i][1]) == "!" ||
+				string(splitData[i][0]) == "?" && string(splitData[i][1]) == "?" {
+				newStringList[len(newStringList)-1] = newStringList[len(newStringList)-1] + splitData[i]
 			} else if string(splitData[i][0]) == ":" {
 				newStringList[len(newStringList)-1] = newStringList[len(newStringList)-1] + ":"
 				newStringList = append(newStringList, splitData[i][1:])
 			} else if string(splitData[i][0]) == ";" {
 				newStringList[len(newStringList)-1] = newStringList[len(newStringList)-1] + ";"
 				newStringList = append(newStringList, splitData[i][1:])
-				} else {
+			} else if string(splitData[i][0]) == "." && string(splitData[i][1]) == "." {
+				newStringList[len(newStringList)-1] = newStringList[len(newStringList)-1] + "..."
+			} else if string(splitData[i]) == "'" {
+				
+			} else {
 				newStringList = append(newStringList, splitData[i])
 			}
-		fmt.Println(newStringList)
+		}
 		newFile, error := os.Create("result.txt")
 		if error != nil {
 			panic("Error creating file")
 		} else {
-			newFile.WriteString("newStringList")
+			returnSentence := ""
+			for i := 0; i < len(newStringList); i++ {
+				returnSentence += newStringList[i]
+				if i < len(newStringList)-2 {
+					returnSentence += " "
+				}
+			}
+			fmt.Println(returnSentence)
+			newFile.WriteString(returnSentence)
 		}
 	}
 }
