@@ -90,7 +90,7 @@ func main() {
 						splitData[i+1] = "'" + splitData[i+1]
 						punctuationStart = true
 					} else {
-						newStringList[len(newStringList)-1] = newStringList[len(newStringList)-1] + "'"
+						newStringList[len(newStringList)-2] = newStringList[len(newStringList)-2] + "'"
 						punctuationStart = false
 					}
 				} else {
