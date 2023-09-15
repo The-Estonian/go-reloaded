@@ -105,7 +105,7 @@ func main() {
 				for i := 0; i < len(newStringList); i++ {
 					returnSentence += newStringList[i]
 					if len(newStringList[i]) > 0 {
-						if i < len(newStringList)-2 {
+						if i < len(newStringList)-1 {
 							returnSentence += " "
 						}
 					}
