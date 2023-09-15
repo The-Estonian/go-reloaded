@@ -16,7 +16,14 @@ func main() {
 		inputFile := os.Args[1]
 		outputFile := os.Args[2]
 		data, error := os.ReadFile(inputFile)
-		splitData := strings.Split(string(data), " ")
+		splitDataToClean := strings.Split(string(data), " ")
+		var splitData []string
+		for k := 0; k < len(splitDataToClean); k++ {
+			if splitDataToClean[k] != " " {
+				splitData = append(splitData, splitDataToClean[k])
+			}
+		}
+		fmt.Println(splitData)
 		if error != nil {
 			panic("Error with file")
 		} else {
